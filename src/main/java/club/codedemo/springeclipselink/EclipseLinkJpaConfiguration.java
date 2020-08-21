@@ -14,6 +14,9 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 配置EclipseLinkJpa实现
+ */
 @Configuration
 public class EclipseLinkJpaConfiguration extends JpaBaseConfiguration {
 
@@ -29,12 +32,9 @@ public class EclipseLinkJpaConfiguration extends JpaBaseConfiguration {
     @Override
     protected Map<String, Object> getVendorProperties() {
         HashMap<String, Object> map = new HashMap<>();
-        map.put(PersistenceUnitProperties.WEAVING, detectWeavingMode());
+        map.put(PersistenceUnitProperties.WEAVING,
+                InstrumentationLoadTimeWeaver.isInstrumentationAvailable() ? "true" : "static");
         map.put(PersistenceUnitProperties.DDL_GENERATION, "drop-and-create-tables");
         return map;
-    }
-
-    private String detectWeavingMode() {
-        return InstrumentationLoadTimeWeaver.isInstrumentationAvailable() ? "true" : "static";
     }
 }
